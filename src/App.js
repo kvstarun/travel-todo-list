@@ -15,12 +15,26 @@ export default function App() {
     );
   }
 
+  function updateItem(id) {
+    setItems((currItems) =>
+      currItems.map((toUpdateItem) =>
+        toUpdateItem.id === id
+          ? { ...toUpdateItem, packed: !toUpdateItem.packed }
+          : toUpdateItem
+      )
+    );
+  }
+
   return (
     <div className="app">
       <Logo />
       <Form onAddItems={handleAddItems} />
-      <PackingList items={items} onDeleteItem={deleteItem} />
-      <Stats items={items.length} />
+      <PackingList
+        items={items}
+        onDeleteItem={deleteItem}
+        onChangeItemsStatus={updateItem}
+      />
+      <Stats items={items} />
     </div>
   );
 }
@@ -40,7 +54,6 @@ function Form({ onAddItems }) {
     if (!description) return;
 
     const newItem = { description, quantity, packed: false, id: Date.now() };
-    console.log(newItem);
 
     onAddItems(newItem); //We are calling handleAddItems() using a prop onAddItems which used in
 
@@ -72,21 +85,31 @@ function Form({ onAddItems }) {
   );
 }
 
-function PackingList({ items, onDeleteItem }) {
+function PackingList({ items, onDeleteItem, onChangeItemsStatus }) {
   return (
     <div className="list">
       <ul className="list">
         {items.map((item) => (
-          <Item itemObj={item} key={item.id} onDeleteItem={onDeleteItem} />
+          <Item
+            itemObj={item}
+            key={item.id}
+            onDeleteItem={onDeleteItem}
+            onChangeItemsStatus={onChangeItemsStatus}
+          />
         ))}
       </ul>
     </div>
   );
 }
 
-function Item({ itemObj, onDeleteItem }) {
+function Item({ itemObj, onDeleteItem, onChangeItemsStatus }) {
   return (
     <li>
+      <input
+        type="checkbox"
+        value={itemObj.packed}
+        onChange={() => onChangeItemsStatus(itemObj.id)}
+      />
       <span style={itemObj.packed ? { textDecoration: "line-through" } : {}}>
         {itemObj.quantity} {itemObj.description}
       </span>
@@ -96,11 +119,22 @@ function Item({ itemObj, onDeleteItem }) {
 }
 
 function Stats({ items }) {
-  const totalItems = items;
+  if (!items.length)
+    return (
+      <p className="stats">
+        <em>Start adding items that you need for your vacation 😄</em>
+      </p>
+    );
+
+  const totalItems = items.length;
+  const itemsPacked = items.filter((item) => item.packed).length;
+  const percentage = Math.round((itemsPacked / totalItems) * 100);
   return (
     <footer className="stats">
       <em>
-        🧳You have {totalItems} items on your list and you already packed X (X%)
+        {percentage === 100
+          ? "You packed everything. Have a great vacation🕺💃"
+          : `🧳You have ${totalItems} items on your list and you already packed ${itemsPacked} (${percentage}%)`}
       </em>
     </footer>
   );
