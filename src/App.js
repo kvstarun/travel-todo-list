@@ -7,11 +7,19 @@ const initialItems = [
 ];
 
 export default function App() {
+  const [items, setItems] = useState([]);
+
+  function handleAddItems(item) {
+    //Here we are taking the current-state of the items[] and then adding the new items to the 'items' state. But while adding items to the array, we are creating new array because arrays should be immutable and we shouldn't mutate an array.
+    //Here currItems is an empty array i.e currItems = []; and now we are adding new items into this currItems array, which then stores in items[] array using setItems() method.
+    setItems((currItems) => [...currItems, item]);
+  }
+
   return (
     <div className="app">
       <Logo />
-      <Form />
-      <PackingList />
+      <Form onAddItems={handleAddItems} />
+      <PackingList items={items} />
       <Stats />
     </div>
   );
@@ -21,7 +29,7 @@ function Logo() {
   return <h1>🌴Travel To-Do🎒</h1>;
 }
 
-function Form() {
+function Form({ onAddItems }) {
   const [description, setDescription] = useState("");
   const [quantity, setQuantity] = useState(1);
 
@@ -33,6 +41,8 @@ function Form() {
 
     const newItem = { description, quantity, packed: false, id: Date.now() };
     console.log(newItem);
+
+    onAddItems(newItem); //We are calling handleAddItems() using a prop onAddItems which used in
 
     setDescription("");
     setQuantity(1);
@@ -61,11 +71,12 @@ function Form() {
     </form>
   );
 }
-function PackingList() {
+
+function PackingList({ items }) {
   return (
     <div className="list">
       <ul className="list">
-        {initialItems.map((item) => (
+        {items.map((item) => (
           <Item itemObj={item} key={item.id} />
         ))}
       </ul>
