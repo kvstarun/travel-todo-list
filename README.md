@@ -9,8 +9,6 @@ PackPal is a simple React application designed to help users organize and manage
 - [Technologies](#technologies)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Features
 
@@ -22,7 +20,7 @@ PackPal is a simple React application designed to help users organize and manage
 
 ## Demo
 
-You can check out a live demo of the project [here](https://your-demo-url.com).
+You can check out a live demo of the project [here](https://drive.google.com/file/d/1x2D3o5trxJS473of4PA5fGuKyZjnHYOo/view?usp=drive_link).
 
 ## Technologies
 
